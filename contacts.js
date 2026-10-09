@@ -9,6 +9,7 @@ const CONTACTS = {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
+  /* Подстановка контактов */
   document.querySelectorAll("[data-contact]").forEach(function (el) {
     const key = el.dataset.contact;
     if (!CONTACTS[key]) return;
@@ -19,10 +20,42 @@ document.addEventListener("DOMContentLoaded", function () {
       el.target = (key === "phone" || key === "email") ? "_self" : "_blank";
       el.rel = "noopener";
     }
-    /* Текст меняем только там, где это нужно: телефон, email, часы.
-       Для кнопок «Макс» и «Telegram» текст остаётся как в HTML. */
     if (key === "phone" && !el.dataset.keepText) el.textContent = CONTACTS.phoneDisplay;
     if (key === "email") el.textContent = CONTACTS.email;
     if (key === "hours") el.textContent = CONTACTS.hours;
+  });
+
+  /* Мобильное меню */
+  const headerInner = document.querySelector(".header__inner");
+  const nav = document.querySelector(".nav");
+  if (!headerInner || !nav || document.querySelector(".burger")) return;
+
+  const burger = document.createElement("button");
+  burger.className = "burger";
+  burger.setAttribute("aria-label", "Открыть меню");
+  burger.innerHTML = "<span></span><span></span><span></span>";
+  headerInner.appendChild(burger);
+
+  function closeMenu() {
+    nav.classList.remove("nav--open");
+    burger.classList.remove("burger--open");
+    document.body.classList.remove("no-scroll");
+  }
+
+  burger.addEventListener("click", function (e) {
+    e.stopPropagation();
+    const isOpen = nav.classList.toggle("nav--open");
+    burger.classList.toggle("burger--open", isOpen);
+    document.body.classList.toggle("no-scroll", isOpen);
+  });
+
+  nav.querySelectorAll("a").forEach(function (a) {
+    a.addEventListener("click", closeMenu);
+  });
+
+  document.addEventListener("click", function (e) {
+    if (nav.classList.contains("nav--open") && !nav.contains(e.target) && !burger.contains(e.target)) {
+      closeMenu();
+    }
   });
 });
