@@ -30,6 +30,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const nav = document.querySelector(".nav");
   if (!headerInner || !nav || document.querySelector(".burger")) return;
 
+  // Затемнение как отдельный элемент внутри шапки (в том же стеке, что и nav)
+  const overlay = document.createElement("div");
+  overlay.className = "nav-overlay";
+  headerInner.appendChild(overlay);
+
+  // Кнопка-бургер
   const burger = document.createElement("button");
   burger.className = "burger";
   burger.setAttribute("aria-label", "Открыть меню");
@@ -41,21 +47,21 @@ document.addEventListener("DOMContentLoaded", function () {
     burger.classList.remove("burger--open");
     document.body.classList.remove("no-scroll");
   }
+  function openMenu() {
+    nav.classList.add("nav--open");
+    burger.classList.add("burger--open");
+    document.body.classList.add("no-scroll");
+  }
 
   burger.addEventListener("click", function (e) {
     e.stopPropagation();
-    const isOpen = nav.classList.toggle("nav--open");
-    burger.classList.toggle("burger--open", isOpen);
-    document.body.classList.toggle("no-scroll", isOpen);
+    if (nav.classList.contains("nav--open")) closeMenu();
+    else openMenu();
   });
+
+  overlay.addEventListener("click", closeMenu);
 
   nav.querySelectorAll("a").forEach(function (a) {
     a.addEventListener("click", closeMenu);
-  });
-
-  document.addEventListener("click", function (e) {
-    if (nav.classList.contains("nav--open") && !nav.contains(e.target) && !burger.contains(e.target)) {
-      closeMenu();
-    }
   });
 });
