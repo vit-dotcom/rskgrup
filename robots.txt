@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /404.html
+Disallow: /politika.html
+
+Sitemap: https://rskgrup.ru/sitemap.xml
+Host: https://rskgrup.ru
