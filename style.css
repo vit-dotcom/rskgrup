@@ -170,3 +170,4 @@ body.no-scroll::after {
 
   .burger { display: flex; }
 }
+body.no-scroll .header { z-index: 200; }
